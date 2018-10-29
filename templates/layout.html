@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bookly</title>
+</head>
+<body>
+	<ul>
+		<li><a href="{{ url_for('index') }}">Home</a></li>
+		<li><a href="{{ url_for('register') }}">Register</a></li>
+		<li>Login</li>
+	</ul>
+	<h1>{% block heading %}{% endblock %}</h1>
+
+	{% block body %}
+	{% endblock %}
+</body>
+</html>
