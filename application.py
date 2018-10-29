@@ -21,13 +21,49 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
+# Get API key for goodreads from local file
+gr_file = open("goodreads.key", "r")
+gr_key = gr_file.read()
 
-@app.route("/")
+# TODO: Handle user login auth
+@app.route("/", methods=["GET", "POST"])
 def index():
-	key = 'atf1iuT5jA46CkYZ7Wpzfw'
-	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": "9781632168146"})
+	if request.method == "POST":
+		return render_template("index.html", val=request.form.get("username"))
+
+	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": gr_key, "isbns": "9781632168146"})
 	return render_template("index.html", val=str(res.json()['books'][0]['work_ratings_count']))
+
+@app.route("/flights")
+def flights():
+	flights = db.execute("SELECT origin, destination FROM flights").fetchall();
+	return render_template("flights.html", flights=flights)
+
+@app.route("/login")
+def login():
+	return render_template("login.html")
+
 
 @app.route("/register")
 def register():
 	return render_template("register.html")
+
+@app.route("/hello", methods=["POST"])
+def hello():
+	username = request.form.get("username")
+	password = request.form.get("password")
+	try:
+		db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", {"username": username, "password": password})
+		db.commit();
+		return render_template("hello.html", username=username)
+	except:
+		return render_template("error.html", message="Username already exists, probably.")
+
+@app.route("/books", methods=["GET", "POST"])
+def books():
+	if session.get("book_list") is None:
+		session["book_list"] = []
+
+	if request.method == "POST":
+		session["book_list"].append(request.form.get("book"))
+	return render_template("books.html", book_list=session["book_list"])

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+	Flights
+{% endblock %}
+
+{% block body %}
+	<p>Lorem ipsum dolor {{ val }}</p>
+
+	{% for flight in flights %}
+    <li>{{ flight.origin }} -> {{ flight.destination }}</li>
+	{% endfor %}
+{% endblock %}

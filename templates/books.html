@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+	New user
+{% endblock %}
+
+{% block body %}
+	<p>Books: {{ book_list }}</p>
+	<br>
+	<form action="{{ url_for('books') }}" method="post">
+		<input type="text" name="book">
+		<button>Submit</button>
+	</form>
+
+{% endblock %}

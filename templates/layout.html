@@ -7,7 +7,9 @@
 	<ul>
 		<li><a href="{{ url_for('index') }}">Home</a></li>
 		<li><a href="{{ url_for('register') }}">Register</a></li>
-		<li>Login</li>
+		<li><a href="{{ url_for('login') }}">Login</a></li>
+		<li><a href="{{ url_for('books') }}">Books</a></li>
+		<li><a href="{{ url_for('flights') }}">Flights</a></li>
 	</ul>
 	<h1>{% block heading %}{% endblock %}</h1>
 
