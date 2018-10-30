@@ -29,19 +29,32 @@ gr_key = gr_file.read()
 @app.route("/", methods=["GET", "POST"])
 def index():
 	if request.method == "POST":
-		return render_template("index.html", val=request.form.get("username"))
+		_username = request.form.get("username")
+		_password = request.form.get("password")
+		valid = db.execute("SELECT username FROM users WHERE username = :_username AND password = :_password",
+			{"_username": _username, "_password": _password}).fetchone()
+		if valid is None:
+			return render_template("error.html", message="Incorrect username or password")
+		else:
+			session["username"] = _username
+			return render_template("index.html", val=valid, user=session["username"])
 
 	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": gr_key, "isbns": "9781632168146"})
-	return render_template("index.html", val=str(res.json()['books'][0]['work_ratings_count']))
+	return render_template("index.html", val=str(res.json()['books'][0]['work_ratings_count']) + 'aa', user=session["username"])
 
 @app.route("/flights")
 def flights():
-	flights = db.execute("SELECT origin, destination FROM flights").fetchall();
+	flights = db.execute("SELECT origin, destination FROM flights").fetchall()
 	return render_template("flights.html", flights=flights)
 
 @app.route("/login")
 def login():
 	return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+	session["username"] = ""
+	return render_template("index.html", user=session["username"])
 
 
 @app.route("/register")

@@ -2,14 +2,25 @@
 <html>
 <head>
 	<title>Bookly</title>
+	<style>
+	ul {
+	    list-style-type: none;
+	    margin: 0;
+	    padding: 0;
+	}
+
+	li {
+	    display: inline;
+	}
+</style>
 </head>
 <body>
 	<ul>
 		<li><a href="{{ url_for('index') }}">Home</a></li>
 		<li><a href="{{ url_for('register') }}">Register</a></li>
 		<li><a href="{{ url_for('login') }}">Login</a></li>
+		<li><a href="{{ url_for('logout') }}">Logout</a></li>
 		<li><a href="{{ url_for('books') }}">Books</a></li>
-		<li><a href="{{ url_for('flights') }}">Flights</a></li>
 	</ul>
 	<h1>{% block heading %}{% endblock %}</h1>
 
